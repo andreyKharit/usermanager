@@ -5,20 +5,49 @@ import com.ankhar.usermanager.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Optional;
+
 @Component
-public class DbUserService {
+public class UserManager implements UserService {
     private final UserRepository userRepository;
 
     @Autowired
-    public DbUserService(UserRepository userRepository) {
+    public UserManager(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    public void createUser(String name, String title, Long security) {
-        User testUser = new User();
-        testUser.setName(name);
-        if (title != null) testUser.setTitle(title);
-        testUser.setSecureNumber(security);
-        userRepository.save(testUser);
+    public void updateUser(Long id, String name, String title, Long code) {
+        User newUser = userRepository.findById(id).orElseGet(User::new);
+        newUser.setName(name);
+        if (title != null) newUser.setTitle(title);
+        newUser.setSecureNumber(code);
+        userRepository.save(newUser);
+    }
+
+    public User initializeNewUser() {
+        User newUser = new User();
+        newUser.setName("New User");
+        newUser.setSecureNumber((long) 111111);
+        userRepository.save(newUser);
+        return newUser;
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        return (List<User>) userRepository.findAll();
+    }
+
+    @Override
+    public User getById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            userRepository.delete(user.get());
+        }
     }
 }

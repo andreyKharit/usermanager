@@ -5,7 +5,6 @@ import javax.persistence.*;
 @Entity
 @Table(name = "user_list", schema = "user_manager")
 public class User {
-    final private String DEFAULT_USER_TITLE = "Newbie";
     @Id
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +19,7 @@ public class User {
     @PrePersist
     private void prePersist() {
         if (this.title == null) {
-            this.title = DEFAULT_USER_TITLE;
+            this.title = "Newbie";
         }
     }
 
