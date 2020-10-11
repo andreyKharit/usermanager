@@ -33,24 +33,25 @@ class UsermanagerApplicationTests {
 
     @Test
     void contextLoads() {
-        User user = userManager.initializeNewUser();
+        User user = userManager.createUser("TEST", "TEST", 12312L);
+        Long id = user.getId();
         assertThat(user)
                 .withFailMessage("Can't create entity.")
                 .isNotNull();
-        User tempUser = userManager.getById(user.getId());
+        User tempUser = userManager.getById(id);
         assertThat(tempUser)
                 .withFailMessage("Can't find created entity.")
                 .isNotNull();
-        userManager.updateUser(user.getId(), "TEST_NAME", "TEST_TITLE", user.getSecureNumber());
-        tempUser = userManager.getById(user.getId());
+        userManager.updateUser(id, "TEST_NAME", "TEST_TITLE", user.getSecureNumber());
+        tempUser = userManager.getById(id);
         assertThat(tempUser.getName())
                 .withFailMessage("Entity 'name' field update failure.")
                 .isEqualTo("TEST_NAME");
         assertThat(tempUser.getTitle())
                 .withFailMessage("Entity 'title' field update failure.")
                 .isEqualTo("TEST_TITLE");
-        userManager.deleteById(user.getId());
-        User user3 = userManager.getById(user.getId());
+        userManager.deleteById(id);
+        User user3 = userManager.getById(id);
         assertThat(user3)
                 .withFailMessage("Deleted test entity still exists in database.")
                 .isNull();

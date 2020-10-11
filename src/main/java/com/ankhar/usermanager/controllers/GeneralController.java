@@ -39,16 +39,24 @@ public class GeneralController {
 
     @RequestMapping(value = "/create", method = RequestMethod.GET)
     public String createUser(Model model) {
-        model.addAttribute("user", userService.initializeNewUser());
-        return "user";
+//        model.addAttribute("user", userService.initializeNewUser());
+        return "new";
     }
 
-    @RequestMapping(value = {"/edit", "/create"}, method = RequestMethod.POST)
-    public String updateOrCreateUser(@RequestParam(name = "id") Long id,
-                                     @RequestParam(name = "name") String name,
-                                     @RequestParam(name = "title") String title,
-                                     @RequestParam(name = "secureNumber") Long code) {
+    @RequestMapping(value = "/edit", method = RequestMethod.POST)
+    public String updateUser(@RequestParam(name = "id") Long id,
+                             @RequestParam(name = "name") String name,
+                             @RequestParam(name = "title") String title,
+                             @RequestParam(name = "secureNumber") Long code) {
         userService.updateUser(id, name, title, code);
+        return "redirect:list";
+    }
+
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    public String persistNewUser(@RequestParam(name = "name") String name,
+                                 @RequestParam(name = "title") String title,
+                                 @RequestParam(name = "secureNumber") Long code) {
+        userService.createUser(name, title, code);
         return "redirect:list";
     }
 }

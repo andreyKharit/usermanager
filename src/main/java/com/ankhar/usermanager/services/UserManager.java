@@ -25,10 +25,11 @@ public class UserManager implements UserService {
         userRepository.save(newUser);
     }
 
-    public User initializeNewUser() {
+    public User createUser(String name, String title, Long code) {
         User newUser = new User();
-        newUser.setName("New User");
-        newUser.setSecureNumber((long) 111111);
+        newUser.setName(name);
+        if (title != null) newUser.setTitle(title);
+        newUser.setSecureNumber(code);
         userRepository.save(newUser);
         return newUser;
     }
