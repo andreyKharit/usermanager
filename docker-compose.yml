@@ -7,6 +7,9 @@ services:
       - "8082:8080"
     networks:
       - "user-management-app"
+    depends_on:
+      mysql-db:
+        condition: service_healthy
   mysql-db:
     image: "styx1291/usermanager:mysql-db"
     container_name: "mysql-remote"
@@ -16,5 +19,10 @@ services:
       - ./mysql:/docker-entrypoint-initdb.d:rw
     environment:
       - MYSQL_ROOT_PASSWORD=root
+    healthcheck:
+      test: mysqladmin -uroot -proot ping
+      interval: 2s
+      timeout: 5s
+      retries: 30
 networks:
   user-management-app:
